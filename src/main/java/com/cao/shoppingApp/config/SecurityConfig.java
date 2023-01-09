@@ -27,21 +27,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/registration",
                         "/cancel/*").permitAll()
                 .antMatchers("/user/home",
-
                         "/user/product/*",
                         "/user/orders",
                         "/user/order/*",
-                        "/user/purchase",
+                        "/purchase",
+
                         "/user/frequent3",
                         "/user/recent3").hasAuthority("User_Permission")
                 .antMatchers("/complete/*",
                         "/admin/home",
-
                         "/admin/updatePrice/*",
                         "/admin/updateStock/*",
-                        "/admin/addProduct",
-                        "/admin/order/*",
                         "/admin/product/*",
+                        "/admin/addProduct",
+
                         "/admin/top3product",
                         "/admin/top3user",
                         "/admin/amount").hasAuthority("Admin_Permission")

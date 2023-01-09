@@ -22,16 +22,16 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
-    public void createNewUser(RegistrationRequest request) throws EmailExistedException, UsernameExistedException, ConstraintViolationException {
+    public void createNewUser(RegistrationRequest request) throws EmailExistedException, UsernameExistedException, ConstraintViolationException, ZeroOrManyException {
         // check duplicate username
-        List<User> usersWithSameInfo = userDAO.getUserByUsername(request.getUsername());
-        if (usersWithSameInfo.size() != 0) {
+        User usersWithSameInfo = userDAO.getUserByUsername(request.getUsername());
+        if (usersWithSameInfo != null) {
             throw new UsernameExistedException("Username existed");
         }
 
         // check duplicate email
         usersWithSameInfo = userDAO.getUserByEmail(request.getEmail());
-        if (usersWithSameInfo.size() != 0) {
+        if (usersWithSameInfo != null) {
             throw new EmailExistedException("Email existed");
         }
 
@@ -48,11 +48,6 @@ public class UserService {
     }
 
     public User getUserByUsername(String username) throws ZeroOrManyException {
-        List<User> users = userDAO.getUserByUsername(username);
-        if (users != null && users.size() == 1) {
-            return users.get(0);
-        } else {
-            throw new ZeroOrManyException("Zero or too many results returned.");
-        }
+        return userDAO.getUserByUsername(username);
     }
 }

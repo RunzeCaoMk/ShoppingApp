@@ -4,6 +4,7 @@ import com.cao.shoppingApp.config.HibernateConfigUtil;
 import com.cao.shoppingApp.domain.Order;
 import com.cao.shoppingApp.domain.Product;
 import com.cao.shoppingApp.domain.User;
+import com.cao.shoppingApp.exception.NotEnoughInventoryException;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
@@ -125,7 +126,6 @@ public class ProductDAO {
         } finally {
             session.close();
         }
-
     }
 
     public void updateStock(Integer product_id, Integer stock) {
@@ -148,6 +148,35 @@ public class ProductDAO {
             }
         } finally {
             session.close();
+        }
+    }
+
+    public int getStockByProduct(Integer product_id) throws NotEnoughInventoryException {
+        Session session = null;
+        int stock = -1;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+
+            String qryString = "SELECT P.stock FROM Product P WHERE P.id=:pId";
+            Query query = session.createQuery(qryString);
+            query.setParameter("pId", product_id);
+            stock = (int) query.list().get(0);
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+        if (stock != -1) {
+            return stock;
+        } else {
+            throw new NotEnoughInventoryException("No enough stock");
         }
     }
 

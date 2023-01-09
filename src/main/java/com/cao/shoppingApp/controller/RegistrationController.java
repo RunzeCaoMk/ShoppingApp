@@ -6,6 +6,7 @@ import com.cao.shoppingApp.domain.response.MessageResponse;
 import com.cao.shoppingApp.exception.ConstraintViolationException;
 import com.cao.shoppingApp.exception.EmailExistedException;
 import com.cao.shoppingApp.exception.UsernameExistedException;
+import com.cao.shoppingApp.exception.ZeroOrManyException;
 import com.cao.shoppingApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +26,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public MessageResponse registration(@RequestBody RegistrationRequest request) throws UsernameExistedException, EmailExistedException, ConstraintViolationException {
+    public MessageResponse registration(@RequestBody RegistrationRequest request) throws UsernameExistedException, EmailExistedException, ConstraintViolationException, ZeroOrManyException {
         userService.createNewUser(request);
 
         if (request.is_admin()) {

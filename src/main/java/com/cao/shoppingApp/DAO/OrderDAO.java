@@ -17,7 +17,7 @@ import java.util.List;
 @Repository
 public class OrderDAO {
 
-    public void createNewOrder(User user) {
+    public Order createNewOrder(User user) {
         Order order = new Order();
         order.setUser(user);
         order.setPlacing_time(new Timestamp(System.currentTimeMillis()));
@@ -37,6 +37,8 @@ public class OrderDAO {
         } finally {
             session.close();
         }
+
+        return order;
     }
 
     public List<Order> getAllOrder() {

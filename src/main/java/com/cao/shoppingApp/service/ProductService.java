@@ -5,6 +5,7 @@ import com.cao.shoppingApp.DAO.ProductDAO;
 import com.cao.shoppingApp.domain.Order;
 import com.cao.shoppingApp.domain.Product;
 import com.cao.shoppingApp.domain.User;
+import com.cao.shoppingApp.domain.request.CreateProductRequest;
 import com.cao.shoppingApp.domain.request.PurchaseRequest;
 import com.cao.shoppingApp.exception.NoPermissionException;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
@@ -23,7 +24,8 @@ public class ProductService {
         this.productDAO = productDAO;
     }
 
-    public void createNewOrder(PurchaseRequest request) {
+    public void createNewProduct(CreateProductRequest request) {
+        productDAO.createNewProduct(request.getName(), request.getDescription(), request.getPrice(), request.getStock());
     }
 
     public List<Product> getAllProduct() {
@@ -36,5 +38,9 @@ public class ProductService {
 
     public void updateStock(Integer product_id, Integer stock) {
         productDAO.updateStock(product_id, stock);
+    }
+
+    public Product getProductById(Integer id) throws ZeroOrManyException {
+        return productDAO.getProductById(id);
     }
 }

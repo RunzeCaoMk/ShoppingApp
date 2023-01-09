@@ -2,9 +2,11 @@ package com.cao.shoppingApp.DAO;
 
 import com.cao.shoppingApp.config.HibernateConfigUtil;
 import com.cao.shoppingApp.domain.User;
+import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
@@ -39,7 +41,11 @@ public class UserDAO {
         }
     }
 
-    public List<User> getUserByUsername(String username) {
+    public String getCurrentUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+    }
+
+    public User getUserByUsername(String username) throws ZeroOrManyException {
         List<User> result = null;
 
         Session session = null;
@@ -64,10 +70,14 @@ public class UserDAO {
             session.close();
         }
 
-        return result;
+        if (result != null && result.size() == 1) {
+            return result.get(0);
+        } else {
+            throw new ZeroOrManyException("Zero or more than 1 user returned.");
+        }
     }
 
-    public List<User> getUserByEmail(String email) {
+    public User getUserByEmail(String email) throws ZeroOrManyException {
         List<User> result = null;
 
         Session session = null;
@@ -92,6 +102,10 @@ public class UserDAO {
             session.close();
         }
 
-        return result;
+        if (result != null && result.size() == 1) {
+            return result.get(0);
+        } else {
+            throw new ZeroOrManyException("Zero or more than 1 user returned.");
+        }
     }
 }

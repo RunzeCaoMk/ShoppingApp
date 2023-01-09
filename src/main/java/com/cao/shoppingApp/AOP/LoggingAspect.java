@@ -15,12 +15,12 @@ public class LoggingAspect {
 
     @After("com.cao.shoppingApp.AOP.PointCuts.inPlaceOrder()")
     public void logPlaceOrderTime(JoinPoint joinPoint){
-        logger.info("From LoggingAspect.logPlaceTime in Place Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
+        logger.info("From LoggingAspect.logPlaceTime in Place Order: {}: {}", System.currentTimeMillis(), joinPoint.getSignature());
     }
 
     @After("com.cao.shoppingApp.AOP.PointCuts.inCancelOrder()")
     public void logCancelOrderTime(JoinPoint joinPoint){
-        logger.info("From LoggingAspect.logCancelOrderTime in Cancel Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
+        logger.info("From LoggingAspect.logCancelOrderTime in Cancel Order: {}: {}", System.currentTimeMillis(), joinPoint.getSignature());
     }
 
     @After("com.cao.shoppingApp.AOP.PointCuts.inCompleteOrder()")
