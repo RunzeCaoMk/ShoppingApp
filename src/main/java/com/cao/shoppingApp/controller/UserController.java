@@ -1,34 +1,41 @@
 package com.cao.shoppingApp.controller;
 
-import com.cao.shoppingApp.exception.InvalidCredentialsException;
-import com.cao.shoppingApp.security.AuthUserDetail;
-import com.cao.shoppingApp.security.JwtProvider;
+
+import com.cao.shoppingApp.domain.ServiceStatus;
+import com.cao.shoppingApp.domain.response.MessageResponse;
+import com.cao.shoppingApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @RestController
+@RequestMapping("user")
 public class UserController {
 
-    private AuthenticationManager authenticationManager;
+    private UserService userService;
 
     @Autowired
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
+    public void setContentService(UserService userService) {
+        this.userService = userService;
     }
 
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    public void setJwtProvider(JwtProvider jwtProvider) {
-        this.jwtProvider = jwtProvider;
-    }
-
-
+//    @PostMapping("create")
+//    @PreAuthorize("hasAuthority('write')")
+//    public MessageResponse createContent(@RequestBody ContentCreationRequest request){
+//        userService.createContent(request);
+//
+//        return MessageResponse.builder()
+//                .serviceStatus(
+//                        ServiceStatus.builder()
+//                                .success(true)
+//                                .build()
+//                )
+//                .message("New content created")
+//                .build();
+//    }
 
 }

@@ -28,8 +28,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "id_admin")
-    private String is_admin;
+    @Column(name = "is_admin")
+    private Boolean is_admin;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
