@@ -1,7 +1,7 @@
 package com.cao.shoppingApp.exception;
 
-public class ConstraintViolationException extends Exception{
-    public ConstraintViolationException(String s) {
+public class NoPermissionException extends Exception{
+    public NoPermissionException(String s) {
         super(s);
     }
 }

@@ -1,5 +1,6 @@
 com\cao\shoppingApp\security\JwtFilter.class
 com\cao\shoppingApp\config\HibernateConfigUtil.class
+com\cao\shoppingApp\exception\ConstraintViolationException.class
 com\cao\shoppingApp\DAO\UserDAO.class
 com\cao\shoppingApp\domain\ServiceStatus.class
 com\cao\shoppingApp\security\AuthUserDetail$AuthUserDetailBuilder.class
@@ -9,8 +10,8 @@ com\cao\shoppingApp\controller\UserController.class
 com\cao\shoppingApp\AOP\PointCuts.class
 com\cao\shoppingApp\exception\EmailExistedException.class
 com\cao\shoppingApp\domain\User.class
-com\cao\shoppingApp\DAO\DAO.class
 com\cao\shoppingApp\domain\response\MessageResponse$MessageResponseBuilder.class
+com\cao\shoppingApp\DAO\OrderDAO.class
 com\cao\shoppingApp\domain\request\RegistrationRequest.class
 com\cao\shoppingApp\exception\UsernameExistedException.class
 com\cao\shoppingApp\domain\response\ErrorResponse$ErrorResponseBuilder.class
@@ -22,8 +23,9 @@ com\cao\shoppingApp\service\UserService.class
 com\cao\shoppingApp\domain\Product.class
 com\cao\shoppingApp\security\JwtProvider.class
 com\cao\shoppingApp\ShoppingApplication.class
+com\cao\shoppingApp\controller\RegistrationController.class
 com\cao\shoppingApp\domain\response\MessageResponse.class
 com\cao\shoppingApp\AOP\LoggingAspect.class
-com\cao\shoppingApp\controller\CommonController.class
 com\cao\shoppingApp\domain\response\ErrorResponse.class
 com\cao\shoppingApp\config\SecurityConfig.class
+com\cao\shoppingApp\exception\ZeroOrManyOrdersException.class

@@ -1,7 +1,7 @@
-package com.beaconfire.springsecuritycontent.domain.response;
+package com.cao.shoppingApp.domain.response;
 
-import com.beaconfire.springsecuritycontent.domain.ServiceStatus;
-import com.beaconfire.springsecuritycontent.entity.Content;
+import com.cao.shoppingApp.domain.Product;
+import com.cao.shoppingApp.domain.ServiceStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class AllContentResponse {
+public class AllProductResponse {
     ServiceStatus serviceStatus;
-    List<Content> contents;
+    List<Product> products;
 }

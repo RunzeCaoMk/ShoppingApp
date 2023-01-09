@@ -1,10 +1,7 @@
 package com.cao.shoppingApp.AOP;
 
 import com.cao.shoppingApp.domain.response.ErrorResponse;
-import com.cao.shoppingApp.exception.ConstraintViolationException;
-import com.cao.shoppingApp.exception.EmailExistedException;
-import com.cao.shoppingApp.exception.UsernameExistedException;
-import com.cao.shoppingApp.exception.ZeroOrManyOrdersException;
+import com.cao.shoppingApp.exception.*;
 import io.jsonwebtoken.SignatureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +36,13 @@ public class MyExceptionHandler {
         return new ResponseEntity(ErrorResponse.builder().message(e.getMessage()).build(), HttpStatus.OK);
     }
 
-    @ExceptionHandler(value = {ZeroOrManyOrdersException.class})
-    public ResponseEntity<ErrorResponse> handleZeroOrManyOrdersException(ZeroOrManyOrdersException e){
+    @ExceptionHandler(value = {ZeroOrManyException.class})
+    public ResponseEntity<ErrorResponse> handleZeroOrManyOrdersException(ZeroOrManyException e){
+        return new ResponseEntity(ErrorResponse.builder().message(e.getMessage()).build(), HttpStatus.OK);
+    }
+
+    @ExceptionHandler(value = {NoPermissionException.class})
+    public ResponseEntity<ErrorResponse> handleNoPermissionException(NoPermissionException e){
         return new ResponseEntity(ErrorResponse.builder().message(e.getMessage()).build(), HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.cao.shoppingApp.DAO;
 
 import com.cao.shoppingApp.config.HibernateConfigUtil;
 import com.cao.shoppingApp.domain.Order;
+import com.cao.shoppingApp.domain.Product;
 import com.cao.shoppingApp.domain.User;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.hibernate.Session;
@@ -15,19 +16,20 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
-public class OrderDAO {
+public class ProductDAO {
 
-    public void createNewOrder(User user) {
-        Order order = new Order();
-        order.setUser(user);
-        order.setPlacing_time(new Timestamp(System.currentTimeMillis()));
-        order.setStatus("Processing");
+    public void createNewProduct(String name, String description, double price, int stock) {
+        Product product = new Product();
+        product.setName(name);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setStock(stock);
 
         Session session = null;
         try {
             session = HibernateConfigUtil.openSession();
             session.beginTransaction();
-            session.save(order);
+            session.save(product);
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -39,8 +41,8 @@ public class OrderDAO {
         }
     }
 
-    public List<Order> getAllOrder() {
-        List<Order> result = null;
+    public List<Product> getAllProduct() {
+        List<Product> result = null;
 
         Session session = null;
         try {
@@ -48,10 +50,11 @@ public class OrderDAO {
             session.beginTransaction();
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+            CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
 
-            Root<Order> root = criteriaQuery.from(Order.class);
+            Root<Product> root = criteriaQuery.from(Product.class);
             criteriaQuery.select(root);
+            criteriaQuery.where(criteriaBuilder.greaterThan(root.get("stock"), 0));
 
             result = session.createQuery(criteriaQuery).getResultList();
 
@@ -68,47 +71,17 @@ public class OrderDAO {
         return result;
     }
 
-    public List<Order> getOrderByUser(User user) {
-        List<Order> result = null;
-
+    public Product getProductById(Integer id) throws ZeroOrManyException {
+        List<Product> result = null;
         Session session = null;
         try {
             session = HibernateConfigUtil.openSession();
             session.beginTransaction();
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
+            CriteriaQuery<Product> criteriaQuery = criteriaBuilder.createQuery(Product.class);
 
-            Root<Order> root = criteriaQuery.from(Order.class);
-            criteriaQuery.select(root);
-            criteriaQuery.where(criteriaBuilder.equal(root.get("user"), user));
-
-            result = session.createQuery(criteriaQuery).getResultList();
-
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (session.getTransaction() != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            session.close();
-        }
-
-        return result;
-    }
-
-    public Order getOrderById(Integer id) throws ZeroOrManyException {
-        List<Order> result = null;
-        Session session = null;
-        try {
-            session = HibernateConfigUtil.openSession();
-            session.beginTransaction();
-
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Order> criteriaQuery = criteriaBuilder.createQuery(Order.class);
-
-            Root<Order> root = criteriaQuery.from(Order.class);
+            Root<Product> root = criteriaQuery.from(Product.class);
             criteriaQuery.select(root);
             criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
 
@@ -125,21 +98,46 @@ public class OrderDAO {
         }
 
         if (result.size() == 0 || result.size() > 1) {
-            throw new ZeroOrManyException("The Order id return either 0 or more than 1 result.");
+            throw new ZeroOrManyException("The Product id return either 0 or more than 1 result.");
         }
 
         return result.get(0);
     }
 
-    public void cancelOrder(Integer order_id) {
+    public void updatePrice(Integer product_id, double price) {
         Session session = null;
         try {
             session = HibernateConfigUtil.openSession();
             session.beginTransaction();
 
-            String qryString = "UPDATE Order o SET o.status='Canceled' WHERE o.id=:oId";
+            String qryString = "UPDATE Product p SET p.price=:pPrice WHERE p.id=:pId";
             Query query = session.createQuery(qryString);
-            query.setParameter("oId", order_id);
+            query.setParameter("pPrice", price);
+            query.setParameter("pId", product_id);
+            query.executeUpdate();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+    }
+
+    public void updateStock(Integer product_id, Integer stock) {
+        Session session = null;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+
+            String qryString = "UPDATE Product p SET p.stock=:pStock WHERE p.id=:pId";
+            Query query = session.createQuery(qryString);
+            query.setParameter("pStock", stock);
+            query.setParameter("pId", product_id);
             query.executeUpdate();
 
             session.getTransaction().commit();
@@ -153,25 +151,4 @@ public class OrderDAO {
         }
     }
 
-    public void completeOrder(Integer order_id) {
-        Session session = null;
-        try {
-            session = HibernateConfigUtil.openSession();
-            session.beginTransaction();
-
-            String qryString = "UPDATE Order o SET o.status='Completed' WHERE o.id=:oId";
-            Query query = session.createQuery(qryString);
-            query.setParameter("oId", order_id);
-            query.executeUpdate();
-
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (session.getTransaction() != null) {
-                session.getTransaction().rollback();
-            }
-        } finally {
-            session.close();
-        }
-    }
 }

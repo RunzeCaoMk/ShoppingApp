@@ -3,7 +3,7 @@ package com.cao.shoppingApp.DAO;
 import com.cao.shoppingApp.config.HibernateConfigUtil;
 import com.cao.shoppingApp.domain.Order;
 import com.cao.shoppingApp.domain.User;
-import com.cao.shoppingApp.exception.ZeroOrManyOrdersException;
+import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
@@ -98,7 +98,7 @@ public class OrderDAO {
         return result;
     }
 
-    public Order getOrderById(Integer id) throws ZeroOrManyOrdersException {
+    public Order getOrderById(Integer id) throws ZeroOrManyException {
         List<Order> result = null;
         Session session = null;
         try {
@@ -125,7 +125,7 @@ public class OrderDAO {
         }
 
         if (result.size() == 0 || result.size() > 1) {
-            throw new ZeroOrManyOrdersException("The Order id return either 0 or more than 1 result.");
+            throw new ZeroOrManyException("The Order id return either 0 or more than 1 result.");
         }
 
         return result.get(0);
@@ -137,9 +137,9 @@ public class OrderDAO {
             session = HibernateConfigUtil.openSession();
             session.beginTransaction();
 
-            String qryString = "UPDATE Order o SET o.status='Canceled' WHERE o.id = ?";
+            String qryString = "UPDATE Order o SET o.status='Canceled' WHERE o.id=:oId";
             Query query = session.createQuery(qryString);
-            query.setParameter(0, order_id);
+            query.setParameter("oId", order_id);
             query.executeUpdate();
 
             session.getTransaction().commit();
@@ -159,9 +159,9 @@ public class OrderDAO {
             session = HibernateConfigUtil.openSession();
             session.beginTransaction();
 
-            String qryString = "UPDATE Order o SET o.status='Completed' WHERE o.id = ?";
+            String qryString = "UPDATE Order o SET o.status='Completed' WHERE o.id=:oId";
             Query query = session.createQuery(qryString);
-            query.setParameter(0, order_id);
+            query.setParameter("oId", order_id);
             query.executeUpdate();
 
             session.getTransaction().commit();

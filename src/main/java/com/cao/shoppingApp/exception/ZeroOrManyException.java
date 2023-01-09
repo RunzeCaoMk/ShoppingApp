@@ -1,7 +1,7 @@
 package com.cao.shoppingApp.exception;
 
-public class ZeroOrManyOrdersException extends Exception{
-    public ZeroOrManyOrdersException(String s) {
+public class ZeroOrManyException extends Exception{
+    public ZeroOrManyException(String s) {
         super(s);
     }
 }

@@ -6,6 +6,7 @@ import com.cao.shoppingApp.domain.request.RegistrationRequest;
 import com.cao.shoppingApp.exception.ConstraintViolationException;
 import com.cao.shoppingApp.exception.EmailExistedException;
 import com.cao.shoppingApp.exception.UsernameExistedException;
+import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +45,14 @@ public class UserService {
 
         // create new user
         userDAO.createNewUser(request.getId(), request.getUsername(), request.getPassword(), request.getEmail(), request.is_admin());
+    }
+
+    public User getUserByUsername(String username) throws ZeroOrManyException {
+        List<User> users = userDAO.getUserByUsername(username);
+        if (users != null && users.size() == 1) {
+            return users.get(0);
+        } else {
+            throw new ZeroOrManyException("Zero or too many results returned.");
+        }
     }
 }

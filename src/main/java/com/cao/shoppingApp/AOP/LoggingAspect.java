@@ -13,14 +13,19 @@ public class LoggingAspect {
 
     private Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-//    @After("com.cao.shoppingApp.AOP.PointCuts.inPlaceOrder()")
-//    public void logPlaceOrderTime(JoinPoint joinPoint){
-//        logger.info("From LoggingAspect.logPlaceTime in Place Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
-//    }
-//
-//    @After("com.cao.shoppingApp.AOP.PointCuts.inUpdateOrder()")
-//    public void logUpdateOrderTime(JoinPoint joinPoint){
-//        logger.info("From LoggingAspect.logUpdateOrderTime in Update Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
-//    }
+    @After("com.cao.shoppingApp.AOP.PointCuts.inPlaceOrder()")
+    public void logPlaceOrderTime(JoinPoint joinPoint){
+        logger.info("From LoggingAspect.logPlaceTime in Place Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
+    }
+
+    @After("com.cao.shoppingApp.AOP.PointCuts.inCancelOrder()")
+    public void logCancelOrderTime(JoinPoint joinPoint){
+        logger.info("From LoggingAspect.logCancelOrderTime in Cancel Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
+    }
+
+    @After("com.cao.shoppingApp.AOP.PointCuts.inCompleteOrder()")
+    public void logCompleteOrderTime(JoinPoint joinPoint){
+        logger.info("From LoggingAspect.logCompleteOrderTime in Complete Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
+    }
 
 }

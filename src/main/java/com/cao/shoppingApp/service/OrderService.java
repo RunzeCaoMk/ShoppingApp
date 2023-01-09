@@ -1,48 +1,46 @@
 package com.cao.shoppingApp.service;
 
-import com.cao.shoppingApp.DAO.UserDAO;
+import com.cao.shoppingApp.DAO.OrderDAO;
+import com.cao.shoppingApp.domain.Order;
 import com.cao.shoppingApp.domain.User;
-import com.cao.shoppingApp.domain.request.RegistrationRequest;
-import com.cao.shoppingApp.exception.ConstraintViolationException;
-import com.cao.shoppingApp.exception.EmailExistedException;
-import com.cao.shoppingApp.exception.UsernameExistedException;
+import com.cao.shoppingApp.domain.request.PurchaseRequest;
+import com.cao.shoppingApp.exception.NoPermissionException;
+import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class UserService {
+public class OrderService {
 
-    private UserDAO userDAO;
+    private OrderDAO orderDAO;
 
     @Autowired
-    public void setContentDao(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public void setContentDao(OrderDAO orderDAO) {
+        this.orderDAO = orderDAO;
     }
 
-    public void createNewUser(RegistrationRequest request) throws EmailExistedException, UsernameExistedException, ConstraintViolationException {
-        // check duplicate username
-        List<User> usersWithSameInfo = userDAO.getUserByUsername(request.getUsername());
-        if (usersWithSameInfo.size() != 0) {
-            throw new UsernameExistedException("Username existed");
-        }
+    public void createNewOrder(PurchaseRequest request) {
+    }
 
-        // check duplicate email
-        usersWithSameInfo = userDAO.getUserByEmail(request.getEmail());
-        if (usersWithSameInfo.size() != 0) {
-            throw new EmailExistedException("Email existed");
+    public void cancelOrder(Integer order_id, User user) throws ZeroOrManyException, NoPermissionException {
+        Order targetOrder = orderDAO.getOrderById(order_id);
+        if (user.getIs_admin() || user.getId() == targetOrder.getId()) {
+            if (targetOrder.getStatus().equals("Processing")) {
+                orderDAO.cancelOrder(order_id);
+            } else {
+                throw new NoPermissionException("Order is not processing and can not be canceled.");
+            }
+        } else {
+            throw new NoPermissionException("You don't have permission to cancel this order.");
         }
+    }
 
-        // check null
-        String username = request.getUsername();
-        String password = request.getPassword();
-        String email = request.getEmail();
-        if (username == null || username.equals("") || password == null || password.equals("") || email == null || email.equals("")) {
-            throw new ConstraintViolationException("Username, password, and email must be NOT NULL");
+    public void completeOrder(Integer order_id) throws NoPermissionException, ZeroOrManyException {
+        Order targetOrder = orderDAO.getOrderById(order_id);
+        if (targetOrder.getStatus().equals("Processing")) {
+            orderDAO.completeOrder(order_id);
+        } else {
+            throw new NoPermissionException("Order is not processing and can not be completed.");
         }
-
-        // create new user
-        userDAO.createNewUser(request.getId(), request.getUsername(), request.getPassword(), request.getEmail(), request.is_admin());
     }
 }
