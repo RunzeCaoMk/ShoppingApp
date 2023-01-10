@@ -100,6 +100,120 @@ public class OrderDAO {
         return result;
     }
 
+    public List<String> getRecent3ItemByUser(User user) {
+        Session session = null;
+        List<String> result = null;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+
+            String qryString = "SELECT p.name " +
+                    "FROM Order o, OrderProduct op, Product p " +
+                    "WHERE o.user=:oUserId AND o.id = op.order_id AND op.product_id = p.id " +
+                    "ORDER BY o.placing_time";
+            Query query = session.createQuery(qryString);
+            query.setParameter("oUserId", user);
+            query.setMaxResults(3);
+            result = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    public List<String> getFrequent3ItemByUser(User user) {
+        Session session = null;
+        List<String> result = null;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+
+            String qryString = "SELECT p.name " +
+                    "FROM Order o, OrderProduct op, Product p " +
+                    "WHERE o.user=:oUserId AND o.id = op.order_id AND op.product_id = p.id " +
+                    "GROUP BY p.name " +
+                    "ORDER BY sum(op.quantity) DESC";
+            Query query = session.createQuery(qryString);
+            query.setParameter("oUserId", user);
+            query.setMaxResults(3);
+            result = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    public List<String> getTop3Product() {
+        Session session = null;
+        List<String> result = null;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+
+            String qryString = "SELECT p.name " +
+                    "FROM Order o, OrderProduct op, Product p " +
+                    "WHERE o.id = op.order_id AND op.product_id = p.id " +
+                    "GROUP BY p.name " +
+                    "ORDER BY sum(op.quantity) DESC";
+            Query query = session.createQuery(qryString);
+            query.setMaxResults(3);
+            result = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
+    public List<String> getTop3User() {
+        Session session = null;
+        List<String> result = null;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+
+//            String qryString = "SELECT u.username " +
+//                    "FROM Order o, OrderProduct op, user u " +
+//                    "WHERE o.id = op.order_id AND u.id = o.user" +
+//                    "GROUP BY u.username " +
+//                    "ORDER BY sum(op.quantity * op.purchased_price) DESC";
+            String qryString = "SELECT u.username FROM user u ORDER BY u.username";
+            Query query = session.createQuery(qryString);
+            query.setMaxResults(3);
+            result = query.list();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+        return result;
+    }
+
     public Order getOrderById(Integer id) throws ZeroOrManyException {
         List<Order> result = null;
         Session session = null;

@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.sql.Timestamp;
+
 
 @Aspect
 @Component
@@ -15,17 +17,17 @@ public class LoggingAspect {
 
     @After("com.cao.shoppingApp.AOP.PointCuts.inPlaceOrder()")
     public void logPlaceOrderTime(JoinPoint joinPoint){
-        logger.info("From LoggingAspect.logPlaceTime in Place Order: {}: {}", System.currentTimeMillis(), joinPoint.getSignature());
+        logger.info("From LoggingAspect.logPlaceTime in Place Order: {}: {}", new Timestamp(System.currentTimeMillis()), joinPoint.getSignature());
     }
 
     @After("com.cao.shoppingApp.AOP.PointCuts.inCancelOrder()")
     public void logCancelOrderTime(JoinPoint joinPoint){
-        logger.info("From LoggingAspect.logCancelOrderTime in Cancel Order: {}: {}", System.currentTimeMillis(), joinPoint.getSignature());
+        logger.info("From LoggingAspect.logCancelOrderTime in Cancel Order: {}: {}", new Timestamp(System.currentTimeMillis()), joinPoint.getSignature());
     }
 
     @After("com.cao.shoppingApp.AOP.PointCuts.inCompleteOrder()")
     public void logCompleteOrderTime(JoinPoint joinPoint){
-        logger.info("From LoggingAspect.logCompleteOrderTime in Complete Order: " + System.currentTimeMillis()  + ": " + joinPoint.getSignature());
+        logger.info("From LoggingAspect.logCompleteOrderTime in Complete Order: " + new Timestamp(System.currentTimeMillis())  + ": " + joinPoint.getSignature());
     }
 
 }

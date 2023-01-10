@@ -2,10 +2,7 @@ package com.cao.shoppingApp.controller;
 
 
 import com.cao.shoppingApp.domain.Order;
-import com.cao.shoppingApp.domain.OrderProduct;
 import com.cao.shoppingApp.domain.ServiceStatus;
-import com.cao.shoppingApp.domain.User;
-import com.cao.shoppingApp.domain.request.CreateProductRequest;
 import com.cao.shoppingApp.domain.request.PurchaseRequest;
 import com.cao.shoppingApp.domain.response.MessageResponse;
 import com.cao.shoppingApp.domain.response.OrderResponse;
@@ -17,7 +14,6 @@ import com.cao.shoppingApp.service.OrderService;
 import com.cao.shoppingApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -98,6 +94,62 @@ public class OrderController {
                                 .build()
                 )
                 .order(order)
+                .build();
+    }
+
+    @GetMapping("/user/recent3")
+    @PreAuthorize("hasAuthority('User_Permission')")
+    public MessageResponse getRecent3ItemByUser() throws ZeroOrManyException {
+        List<String> items = orderService.getRecent3ItemByUser();
+        return MessageResponse.builder()
+                .serviceStatus(
+                        ServiceStatus.builder()
+                                .success(true)
+                                .build()
+                )
+                .message(items.toString())
+                .build();
+    }
+
+    @GetMapping("/user/frequent3")
+    @PreAuthorize("hasAuthority('User_Permission')")
+    public MessageResponse getFrequent3ItemByUser() throws ZeroOrManyException {
+        List<String> items = orderService.getFrequent3ItemByUser();
+        return MessageResponse.builder()
+                .serviceStatus(
+                        ServiceStatus.builder()
+                                .success(true)
+                                .build()
+                )
+                .message(items.toString())
+                .build();
+    }
+
+    @GetMapping("/admin/top3product")
+    @PreAuthorize("hasAuthority('Admin_Permission')")
+    public MessageResponse getTop3Product() {
+        List<String> products = orderService.getTop3Product();
+        return MessageResponse.builder()
+                .serviceStatus(
+                        ServiceStatus.builder()
+                                .success(true)
+                                .build()
+                )
+                .message(products.toString())
+                .build();
+    }
+
+    @GetMapping("/admin/top3user")
+    @PreAuthorize("hasAuthority('Admin_Permission')")
+    public MessageResponse getTop3User() {
+        List<String> users = orderService.getTop3User();
+        return MessageResponse.builder()
+                .serviceStatus(
+                        ServiceStatus.builder()
+                                .success(true)
+                                .build()
+                )
+                .message(users.toString())
                 .build();
     }
 }

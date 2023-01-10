@@ -4,11 +4,9 @@ import com.cao.shoppingApp.DAO.OrderDAO;
 import com.cao.shoppingApp.DAO.UserDAO;
 import com.cao.shoppingApp.domain.Order;
 import com.cao.shoppingApp.domain.User;
-import com.cao.shoppingApp.domain.request.PurchaseRequest;
 import com.cao.shoppingApp.exception.NoPermissionException;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -64,5 +62,23 @@ public class OrderService {
 
     public Order getOrderById(Integer id) throws ZeroOrManyException {
         return orderDAO.getOrderById(id);
+    }
+
+    public List<String> getRecent3ItemByUser() throws ZeroOrManyException {
+        String username = userDAO.getCurrentUsername();
+        return orderDAO.getRecent3ItemByUser(userDAO.getUserByUsername(username));
+    }
+
+    public List<String> getFrequent3ItemByUser() throws ZeroOrManyException {
+        String username = userDAO.getCurrentUsername();
+        return orderDAO.getFrequent3ItemByUser(userDAO.getUserByUsername(username));
+    }
+
+    public List<String> getTop3Product() {
+        return orderDAO.getTop3Product();
+    }
+
+    public List<String> getTop3User() {
+        return orderDAO.getTop3User();
     }
 }

@@ -30,17 +30,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/user/product/*",
                         "/user/orders",
                         "/user/order/*",
-                        "/purchase",
-
+                        "/user/recent3",
                         "/user/frequent3",
-                        "/user/recent3").hasAuthority("User_Permission")
+                        "/purchase").hasAuthority("User_Permission")
                 .antMatchers("/complete/*",
                         "/admin/home",
                         "/admin/updatePrice/*",
                         "/admin/updateStock/*",
                         "/admin/product/*",
                         "/admin/addProduct",
-
                         "/admin/top3product",
                         "/admin/top3user",
                         "/admin/amount").hasAuthority("Admin_Permission")

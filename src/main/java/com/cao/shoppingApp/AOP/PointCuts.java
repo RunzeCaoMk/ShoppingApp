@@ -9,10 +9,10 @@ public class PointCuts {
     @Pointcut("execution(* com.cao.shoppingApp.DAO.OrderDAO.createNewOrder())")
     public void inPlaceOrder(){}
 
-    @Pointcut("execution(* com.cao.shoppingApp.DAO.OrderDAO.cancelOrder())")
+    @Pointcut("execution(* com.cao.shoppingApp.DAO.OrderDAO.cancelOrder(Integer))")
     public void inCancelOrder(){}
 
-    @Pointcut("execution(* com.cao.shoppingApp.DAO.OrderDAO.completeOrder())")
+    @Pointcut("execution(* com.cao.shoppingApp.DAO.OrderDAO.completeOrder(Integer))")
     public void inCompleteOrder(){}
 
 }
