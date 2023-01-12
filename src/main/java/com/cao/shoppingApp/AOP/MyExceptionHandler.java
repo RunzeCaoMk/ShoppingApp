@@ -45,4 +45,9 @@ public class MyExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNoPermissionException(NoPermissionException e){
         return new ResponseEntity(ErrorResponse.builder().message(e.getMessage()).build(), HttpStatus.OK);
     }
+
+    @ExceptionHandler(value = {NotEnoughInventoryException.class})
+    public ResponseEntity<ErrorResponse> handleNotEnoughInventoryException(NotEnoughInventoryException e){
+        return new ResponseEntity(ErrorResponse.builder().message(e.getMessage()).build(), HttpStatus.OK);
+    }
 }

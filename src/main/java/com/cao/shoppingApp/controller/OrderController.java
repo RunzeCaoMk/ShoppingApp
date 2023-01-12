@@ -1,18 +1,21 @@
 package com.cao.shoppingApp.controller;
 
 
+import com.cao.shoppingApp.domain.POJO.PurchaseItem;
 import com.cao.shoppingApp.domain.entity.Order;
+import com.cao.shoppingApp.domain.entity.Product;
 import com.cao.shoppingApp.domain.response.ServiceStatus;
 import com.cao.shoppingApp.domain.request.PurchaseRequest;
 import com.cao.shoppingApp.domain.response.AllOrderResponse;
 import com.cao.shoppingApp.domain.response.MessageResponse;
-import com.cao.shoppingApp.domain.response.OrderPOJO;
+import com.cao.shoppingApp.domain.POJO.OrderPOJO;
 import com.cao.shoppingApp.domain.response.OrderResponse;
 import com.cao.shoppingApp.exception.NoPermissionException;
 import com.cao.shoppingApp.exception.NotEnoughInventoryException;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
 import com.cao.shoppingApp.service.OrderProductService;
 import com.cao.shoppingApp.service.OrderService;
+import com.cao.shoppingApp.service.ProductService;
 import com.cao.shoppingApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +28,7 @@ import java.util.List;
 public class OrderController {
     private UserService userService;
     private OrderService orderService;
+    private ProductService productService;
     private OrderProductService orderProductService;
 
     @Autowired
@@ -38,20 +42,21 @@ public class OrderController {
     }
 
     @Autowired
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @Autowired
     public void setOrderProductService(OrderProductService orderProductService) {
         this.orderProductService = orderProductService;
     }
 
     @PutMapping("/cancel/{order_id}")
-    public MessageResponse cancelOrder(@PathVariable Integer order_id) throws ZeroOrManyException, NoPermissionException {
+    public MessageResponse cancelOrder(@PathVariable Integer order_id) throws ZeroOrManyException, NoPermissionException, NotEnoughInventoryException {
         orderService.cancelOrder(order_id);
 
         return MessageResponse.builder()
-                .serviceStatus(
-                        ServiceStatus.builder()
-                                .success(true)
-                                .build()
-                )
+                .serviceStatus(ServiceStatus.builder().success(true).build())
                 .message("Order canceled")
                 .build();
     }
@@ -91,16 +96,24 @@ public class OrderController {
     @PostMapping("/purchase")
     @PreAuthorize("hasAuthority('User_Permission')")
     public OrderResponse purchase(@RequestBody PurchaseRequest request) throws ZeroOrManyException, NotEnoughInventoryException {
+        // check inventory
+        for (PurchaseItem pi : request.getPurchaseItems()) {
+            Product p = productService.getProductById(pi.getProduct_id());
+            int stock = p.getStock();
+            if (pi.getQuantity() > stock) {
+                throw new NotEnoughInventoryException("There is no enough inventory for " + p.getName());
+            }
+        }
+
         Order order = orderService.createNewOrder();
         orderProductService.createOrderProduct(request, order);
-        order.setOrderProducts(request.getOrderProducts());
+
+        // convert to orderPOJO for response
+        OrderPOJO orderPOJO = new OrderPOJO(order.getPlacing_time(), order.getStatus(), order.getUser().getUsername());
+//        order.setOrderProducts(request.getOrderProducts());
         return OrderResponse.builder()
-                .serviceStatus(
-                        ServiceStatus.builder()
-                                .success(true)
-                                .build()
-                )
-                .order(order)
+                .serviceStatus(ServiceStatus.builder().success(true).build())
+                .orderPOJO(orderPOJO)
                 .build();
     }
 

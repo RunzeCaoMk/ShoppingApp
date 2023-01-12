@@ -1,4 +1,4 @@
-package com.cao.shoppingApp.domain.response;
+package com.cao.shoppingApp.domain.POJO;
 
 import com.cao.shoppingApp.domain.entity.OrderProduct;
 import lombok.*;
@@ -16,9 +16,4 @@ public class OrderPOJO {
     private Timestamp placing_time;
     private String status;
     private String username;
-
-    public OrderPOJO(Timestamp placing_time, String status) {
-        this.placing_time = placing_time;
-        this.status = status;
-    }
 }
