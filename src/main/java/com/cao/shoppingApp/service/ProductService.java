@@ -1,13 +1,8 @@
 package com.cao.shoppingApp.service;
 
-import com.cao.shoppingApp.DAO.OrderDAO;
 import com.cao.shoppingApp.DAO.ProductDAO;
-import com.cao.shoppingApp.domain.Order;
-import com.cao.shoppingApp.domain.Product;
-import com.cao.shoppingApp.domain.User;
+import com.cao.shoppingApp.domain.entity.Product;
 import com.cao.shoppingApp.domain.request.CreateProductRequest;
-import com.cao.shoppingApp.domain.request.PurchaseRequest;
-import com.cao.shoppingApp.exception.NoPermissionException;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

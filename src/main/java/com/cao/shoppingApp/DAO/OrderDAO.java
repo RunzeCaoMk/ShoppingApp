@@ -1,9 +1,10 @@
 package com.cao.shoppingApp.DAO;
 
 import com.cao.shoppingApp.config.HibernateConfigUtil;
-import com.cao.shoppingApp.domain.Order;
-import com.cao.shoppingApp.domain.User;
+import com.cao.shoppingApp.domain.entity.Order;
+import com.cao.shoppingApp.domain.entity.User;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
@@ -56,6 +57,9 @@ public class OrderDAO {
             criteriaQuery.select(root);
 
             result = session.createQuery(criteriaQuery).getResultList();
+            for (Order o : result) {
+                Hibernate.initialize(o.getUser());
+            }
 
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -83,9 +87,12 @@ public class OrderDAO {
 
             Root<Order> root = criteriaQuery.from(Order.class);
             criteriaQuery.select(root);
-            criteriaQuery.where(criteriaBuilder.equal(root.get("user"), user));
+            criteriaQuery.where(criteriaBuilder.equal(root.get("user"), user.getId()));
 
             result = session.createQuery(criteriaQuery).getResultList();
+            for (Order o : result) {
+                Hibernate.initialize(o.getUser());
+            }
 
             session.getTransaction().commit();
         } catch (Exception e) {

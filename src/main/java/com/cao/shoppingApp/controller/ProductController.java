@@ -1,23 +1,18 @@
 package com.cao.shoppingApp.controller;
 
 
-import com.cao.shoppingApp.domain.Product;
-import com.cao.shoppingApp.domain.ServiceStatus;
-import com.cao.shoppingApp.domain.User;
+import com.cao.shoppingApp.domain.entity.Product;
+import com.cao.shoppingApp.domain.response.ServiceStatus;
 import com.cao.shoppingApp.domain.request.CreateProductRequest;
 import com.cao.shoppingApp.domain.response.AllProductResponse;
 import com.cao.shoppingApp.domain.response.MessageResponse;
 import com.cao.shoppingApp.domain.response.ProductResponse;
-import com.cao.shoppingApp.exception.NoPermissionException;
 import com.cao.shoppingApp.exception.ZeroOrManyException;
-import com.cao.shoppingApp.service.OrderService;
 import com.cao.shoppingApp.service.ProductService;
-import com.cao.shoppingApp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.Null;
 import java.util.List;
 
 

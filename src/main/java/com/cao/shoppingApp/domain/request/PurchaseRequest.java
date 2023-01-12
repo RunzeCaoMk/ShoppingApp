@@ -1,6 +1,6 @@
 package com.cao.shoppingApp.domain.request;
 
-import com.cao.shoppingApp.domain.OrderProduct;
+import com.cao.shoppingApp.domain.entity.OrderProduct;
 import lombok.Getter;
 import lombok.Setter;
 

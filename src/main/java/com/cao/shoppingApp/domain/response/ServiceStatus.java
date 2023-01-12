@@ -1,4 +1,4 @@
-package com.cao.shoppingApp.domain;
+package com.cao.shoppingApp.domain.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

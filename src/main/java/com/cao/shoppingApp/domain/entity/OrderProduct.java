@@ -1,4 +1,4 @@
-package com.cao.shoppingApp.domain;
+package com.cao.shoppingApp.domain.entity;
 
 import lombok.*;
 

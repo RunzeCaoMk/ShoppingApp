@@ -1,10 +1,12 @@
 package com.cao.shoppingApp.controller;
 
 
-import com.cao.shoppingApp.domain.Order;
-import com.cao.shoppingApp.domain.ServiceStatus;
+import com.cao.shoppingApp.domain.entity.Order;
+import com.cao.shoppingApp.domain.response.ServiceStatus;
 import com.cao.shoppingApp.domain.request.PurchaseRequest;
+import com.cao.shoppingApp.domain.response.AllOrderResponse;
 import com.cao.shoppingApp.domain.response.MessageResponse;
+import com.cao.shoppingApp.domain.response.OrderPOJO;
 import com.cao.shoppingApp.domain.response.OrderResponse;
 import com.cao.shoppingApp.exception.NoPermissionException;
 import com.cao.shoppingApp.exception.NotEnoughInventoryException;
@@ -71,8 +73,13 @@ public class OrderController {
 
     @GetMapping("/user/orders")
     @PreAuthorize("hasAuthority('User_Permission')")
-    public List<Order> getOrderByUser() throws ZeroOrManyException {
-        return orderService.getOrderByUser();
+    public AllOrderResponse getOrderByUser() throws ZeroOrManyException {
+        List<OrderPOJO> orders = orderService.getOrderByUser();
+
+        return AllOrderResponse.builder()
+                .serviceStatus(ServiceStatus.builder().success(true).build())
+                .orders(orders)
+                .build();
     }
 
     @GetMapping("/user/order/{order_id}")
@@ -144,12 +151,19 @@ public class OrderController {
     public MessageResponse getTop3User() {
         List<String> users = orderService.getTop3User();
         return MessageResponse.builder()
-                .serviceStatus(
-                        ServiceStatus.builder()
-                                .success(true)
-                                .build()
-                )
+                .serviceStatus(ServiceStatus.builder().success(true).build())
                 .message(users.toString())
+                .build();
+    }
+
+    @GetMapping("/admin/orders")
+    @PreAuthorize("hasAuthority('Admin_Permission')")
+    public AllOrderResponse getAllOrders() throws ZeroOrManyException {
+        List<OrderPOJO> orders = orderService.getAllOrders();
+
+        return AllOrderResponse.builder()
+                .serviceStatus(ServiceStatus.builder().success(true).build())
+                .orders(orders)
                 .build();
     }
 }

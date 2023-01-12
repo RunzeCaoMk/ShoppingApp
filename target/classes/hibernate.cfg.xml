@@ -22,10 +22,10 @@
         <!--        how many connections it should try to acquire if the pool runs out of available connections.-->
         <property name="hibernate.c3p0.acquire_increment">5</property>
 
-        <mapping class="com.cao.shoppingApp.domain.User"/>
-        <mapping class="com.cao.shoppingApp.domain.Order"/>
-        <mapping class="com.cao.shoppingApp.domain.OrderProduct"/>
-        <mapping class="com.cao.shoppingApp.domain.Product"/>
+        <mapping class="com.cao.shoppingApp.domain.entity.User"/>
+        <mapping class="com.cao.shoppingApp.domain.entity.Order"/>
+        <mapping class="com.cao.shoppingApp.domain.entity.OrderProduct"/>
+        <mapping class="com.cao.shoppingApp.domain.entity.Product"/>
 
     </session-factory>
 </hibernate-configuration>

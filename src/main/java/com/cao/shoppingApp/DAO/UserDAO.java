@@ -1,11 +1,9 @@
 package com.cao.shoppingApp.DAO;
 
 import com.cao.shoppingApp.config.HibernateConfigUtil;
-import com.cao.shoppingApp.domain.User;
-import com.cao.shoppingApp.exception.ZeroOrManyException;
+import com.cao.shoppingApp.domain.entity.User;
+import com.cao.shoppingApp.security.PasswordEncryptor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +15,13 @@ import java.util.List;
 @Repository
 public class UserDAO {
 
-    public void createNewUser(Integer id, String username, String password, String email, boolean is_admin) {
+    public void createNewUser(Integer id, String username, String password, String email) {
         User user = new User();
         user.setId(id);
         user.setUsername(username);
-        user.setPassword(password);
+        user.setPassword(PasswordEncryptor.encodePassword(password));
         user.setEmail(email);
-        user.setIs_admin(is_admin);
+        user.setIs_admin(false);
 
         Session session = null;
         try {
@@ -45,7 +43,37 @@ public class UserDAO {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 
-    public User getUserByUsername(String username) throws ZeroOrManyException {
+    public List<User> getUserById(Integer id) {
+        List<User> result = null;
+
+        Session session = null;
+        try {
+            session = HibernateConfigUtil.openSession();
+            session.beginTransaction();
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+
+            Root<User> root = criteriaQuery.from(User.class);
+            criteriaQuery.select(root);
+            criteriaQuery.where(criteriaBuilder.equal(root.get("id"), id));
+
+            result = session.createQuery(criteriaQuery).getResultList();
+            result.isEmpty();
+
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (session.getTransaction() != null) {
+                session.getTransaction().rollback();
+            }
+        } finally {
+            session.close();
+        }
+
+        return result;
+    }
+
+    public List<User> getUserByUsername(String username) {
         List<User> result = null;
 
         Session session = null;
@@ -70,14 +98,10 @@ public class UserDAO {
             session.close();
         }
 
-        if (result != null && result.size() == 1) {
-            return result.get(0);
-        } else {
-            throw new ZeroOrManyException("Zero or more than 1 user returned.");
-        }
+        return result;
     }
 
-    public User getUserByEmail(String email) throws ZeroOrManyException {
+    public List<User> getUserByEmail(String email) {
         List<User> result = null;
 
         Session session = null;
@@ -102,10 +126,6 @@ public class UserDAO {
             session.close();
         }
 
-        if (result != null && result.size() == 1) {
-            return result.get(0);
-        } else {
-            throw new ZeroOrManyException("Zero or more than 1 user returned.");
-        }
+        return result;
     }
 }

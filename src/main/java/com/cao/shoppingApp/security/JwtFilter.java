@@ -26,9 +26,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        // skip for registration
+        if ("/registration".equals(request.getRequestURI())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         Optional<AuthUserDetail> authUserDetailOptional = jwtProvider.resolveToken(request); // extract jwt from request, generate a userdetails object
 
-        if (authUserDetailOptional.isPresent()){
+        if (authUserDetailOptional.isPresent()) {
             AuthUserDetail authUserDetail = authUserDetailOptional.get();
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     authUserDetail.getUsername(),

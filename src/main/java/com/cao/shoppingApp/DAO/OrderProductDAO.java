@@ -1,19 +1,15 @@
 package com.cao.shoppingApp.DAO;
 
 import com.cao.shoppingApp.config.HibernateConfigUtil;
-import com.cao.shoppingApp.domain.Order;
-import com.cao.shoppingApp.domain.OrderProduct;
-import com.cao.shoppingApp.domain.Product;
-import com.cao.shoppingApp.domain.User;
-import com.cao.shoppingApp.exception.ZeroOrManyException;
+import com.cao.shoppingApp.domain.entity.Order;
+import com.cao.shoppingApp.domain.entity.OrderProduct;
+import com.cao.shoppingApp.domain.entity.Product;
 import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
